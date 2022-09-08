@@ -1,4 +1,4 @@
-import { MemoryAccount } from '@aeternity/aepp-sdk';
+import { generateKeyPair, MemoryAccount } from '@aeternity/aepp-sdk';
 
 export const NODE_URL = 'http://localhost:3013';
 export const COMPILER_URL = 'http://localhost:3080';
@@ -12,3 +12,5 @@ export const FAUCET_ACCOUNT = new MemoryAccount({
     secretKey: FAUCET_SECRET_KEY,
   },
 });
+export const INITIATOR_KEYPAIR = generateKeyPair();
+export const RESPONDER_KEYPAIR = generateKeyPair();
