@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  node:
+    image: aeternity/aeternity:${NODE_TAG-v6.5.2}
+    hostname: node
+    ports: ["3013:3013", "3113:3113", "3014:3014", "3114:3114"]
+    volumes:
+      - ./docker/aeternity_node_mean16.yaml:/home/aeternity/node/aeternity.yaml
+      - ./docker/accounts_test.json:/home/aeternity/node/data/aecore/.genesis/accounts_test.json
+    networks:      
+      - game_network
+
+  compiler:
+    image: aeternity/aesophia_http:${COMPILER_TAG-v6.1.0}
+    hostname: compiler
+    ports: ["3080:3080"]
+    logging:
+      driver: none
+    networks:      
+      - game_network
+    depends_on:
+      - node
+networks:
+  game_network: 
+    driver: bridge
