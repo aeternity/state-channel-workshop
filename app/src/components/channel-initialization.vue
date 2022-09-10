@@ -1,22 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { initSdk, initiatorSdk, responderSdk } from '../utils/sdk/sdk.service';
-import {
-  initializeChannels,
-  initiatorChannel,
-  responderChannel,
-} from '../utils/game-manager';
+import { initSdk } from '../utils/sdk/sdk.service';
+import { initializeChannels } from '../utils/game-manager';
 
+const emit = defineEmits(['channelsInitialized']);
 const isChannelOpening = ref(false);
 
 async function initializeSdk() {
   isChannelOpening.value = true;
   await initSdk();
-  console.log(initiatorSdk);
-  console.log(responderSdk);
   await initializeChannels();
-  console.log(initiatorChannel);
-  console.log(responderChannel);
+  emit('channelsInitialized');
 }
 </script>
 

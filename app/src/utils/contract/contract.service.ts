@@ -2,10 +2,12 @@ import { AeSdk, Channel, encodeContractAddress } from '@aeternity/aepp-sdk';
 import { SignTx } from '@aeternity/aepp-sdk/es/channel/internal';
 import { Encoded } from '@aeternity/aepp-sdk/es/utils/encoder';
 import { contractBytecode, contractAci } from './contract';
+import SHA from 'sha.js';
 import {
   CONTRACT_CONFIGURATION,
   CONTRACT_NAME,
   Methods,
+  Moves,
 } from './contract.constants';
 
 /**
@@ -59,4 +61,13 @@ export async function buildContract(
     contractCreationChannelRound
   );
   return { instance: contract, address: contractAddress };
+}
+
+/**
+ * Helper function to hash the first move
+ */
+export function getMoveHash(move: Moves, hashKey: string) {
+  return SHA('sha256')
+    .update(hashKey + move)
+    .digest('hex');
 }
