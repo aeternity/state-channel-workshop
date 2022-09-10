@@ -1,4 +1,5 @@
 import { Encoded } from '@aeternity/aepp-sdk/es/utils/encoder';
+import BigNumber from 'bignumber.js';
 import { defineStore } from 'pinia';
 import { Moves } from '../utils/contract/contract.constants';
 
@@ -10,6 +11,8 @@ interface GameRoundStore {
   isComplete: boolean;
   winner?: Encoded.AccountAddress;
   hashKey: string;
+  initiatorBalance?: BigNumber;
+  responderBalance?: BigNumber;
 }
 
 export const useGameRoundStore = defineStore<
@@ -27,17 +30,18 @@ export const useGameRoundStore = defineStore<
     isComplete: false,
     winner: undefined,
     hashKey: Math.random().toString(16).substring(2, 8),
+    initiatorBalance: undefined,
+    responderBalance: undefined,
   }),
   actions: {
     startNewRound() {
-      const gameRoundStore = useGameRoundStore();
-      gameRoundStore.index++;
-      gameRoundStore.initiatorMove = undefined;
-      gameRoundStore.responderMove = undefined;
-      gameRoundStore.isComplete = false;
-      gameRoundStore.hasRevealed = false;
-      gameRoundStore.winner = undefined;
-      gameRoundStore.hashKey = Math.random().toString(16).substring(2, 8);
+      this.index++;
+      this.initiatorMove = undefined;
+      this.responderMove = undefined;
+      this.isComplete = false;
+      this.hasRevealed = false;
+      this.winner = undefined;
+      this.hashKey = Math.random().toString(16).substring(2, 8);
     },
   },
 });

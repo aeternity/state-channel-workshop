@@ -13,7 +13,8 @@ import { ContractInstance } from '@aeternity/aepp-sdk/es/contract/aci';
 import { Methods, Moves } from './contract/contract.constants';
 import { getMoveHash } from './contract/contract.service';
 import { useGameRoundStore } from '../stores/game-round';
-import { INITIATOR_KEYPAIR } from './sdk/sdk.constants';
+import { INITIATOR_KEYPAIR, RESPONDER_KEYPAIR } from './sdk/sdk.constants';
+import BigNumber from 'bignumber.js';
 
 export let initiatorChannel: Channel;
 export let responderChannel: Channel;
@@ -77,6 +78,7 @@ export async function playerMakeMove(
     [isInitiator ? getMoveHash(move, gameRoundStore.hashKey) : move]
   );
   if (result?.accepted) {
+    updateBalances();
     if (isInitiator) {
       gameRoundStore.initiatorMove = move;
     } else {
@@ -120,4 +122,18 @@ async function finishGameRound(winner?: Encoded.AccountAddress) {
   const gameRoundStore = useGameRoundStore();
   gameRoundStore.winner = winner;
   gameRoundStore.isComplete = true;
+  updateBalances();
+}
+
+export async function updateBalances() {
+  const balances = await initiatorChannel.balances([
+    INITIATOR_KEYPAIR.publicKey,
+    RESPONDER_KEYPAIR.publicKey,
+  ]);
+  useGameRoundStore().initiatorBalance = new BigNumber(
+    balances[INITIATOR_KEYPAIR.publicKey]
+  );
+  useGameRoundStore().responderBalance = new BigNumber(
+    balances[RESPONDER_KEYPAIR.publicKey]
+  );
 }

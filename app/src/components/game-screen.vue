@@ -17,6 +17,13 @@ const winner = computed(() => {
     else return "It's a draw!";
   } else return null;
 });
+
+const initiatorBalance = computed(
+  () => gameRoundStore.initiatorBalance?.dividedBy(1e18).toFormat(2) ?? '0.00'
+);
+const responderBalance = computed(
+  () => gameRoundStore.responderBalance?.dividedBy(1e18).toFormat(2) ?? '0.00'
+);
 </script>
 
 <template>
@@ -25,12 +32,14 @@ const winner = computed(() => {
     <div class="players">
       <PlayerControls
         player="initiator"
+        :balance="initiatorBalance"
         :isDisabled="
           gameRoundStore.index <= 0 || !!gameRoundStore.initiatorMove
         "
       />
       <PlayerControls
         player="responder"
+        :balance="responderBalance"
         :isDisabled="
           !gameRoundStore.initiatorMove || !!gameRoundStore.responderMove
         "

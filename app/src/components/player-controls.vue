@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { Moves } from '../utils/contract/contract.constants';
 import { playerMakeMove } from '../utils/game-manager';
 
 const props = defineProps<{
   player: 'initiator' | 'responder';
   isDisabled: boolean;
+  balance: string;
 }>();
 
-const title = `${props.player} controls`;
+const title = computed(() => `${props.player} ${props.balance}Æ`);
 
 function makeMove(move: Moves) {
   playerMakeMove(move, props.player);

@@ -10,6 +10,7 @@ import {
   revealRoundResult,
   setInitiatorContract,
   setResponderContract,
+  updateBalances,
 } from '../game-manager';
 import { INITIATOR_KEYPAIR, RESPONDER_KEYPAIR } from '../sdk/sdk.constants';
 import { Update } from './channel.types';
@@ -35,6 +36,7 @@ export async function registerEvents(
   channelInstance.on('statusChanged', async (status) => {
     if (status === 'open') {
       if (role === 'initiator') {
+        updateBalances();
         // build and deploy the contract
         const contract = await deployContract(
           initiatorSdk,
