@@ -20,7 +20,7 @@ export const useGameRoundStore = defineStore<
   GameRoundStore,
   // eslint-disable-next-line @typescript-eslint/ban-types
   {},
-  { startNewRound: () => void }
+  { startNewRound: () => void; reset: () => void }
 >('gameRound', {
   state: () => ({
     initiatorMove: undefined,
@@ -41,6 +41,17 @@ export const useGameRoundStore = defineStore<
       this.isComplete = false;
       this.hasRevealed = false;
       this.winner = undefined;
+      this.hashKey = Math.random().toString(16).substring(2, 8);
+    },
+    reset() {
+      this.index = 0;
+      this.initiatorMove = undefined;
+      this.responderMove = undefined;
+      this.isComplete = false;
+      this.hasRevealed = false;
+      this.winner = undefined;
+      this.initiatorBalance = undefined;
+      this.responderBalance = undefined;
       this.hashKey = Math.random().toString(16).substring(2, 8);
     },
   },

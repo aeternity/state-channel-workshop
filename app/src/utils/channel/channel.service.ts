@@ -7,6 +7,7 @@ import {
 import { Encoded } from '@aeternity/aepp-sdk/es/utils/encoder';
 import { buildContract, deployContract } from '../contract/contract.service';
 import {
+  initiatorChannel,
   revealRoundResult,
   setInitiatorContract,
   setResponderContract,
@@ -27,6 +28,16 @@ import { useGameRoundStore } from '../../stores/game-round';
 export async function initializeChannel(config: ChannelOptions) {
   const channelInstance = await Channel.initialize(config);
   return channelInstance;
+}
+
+export async function closeChannel(
+  channel: Channel = initiatorChannel,
+  signTx: SignTxWithTag = initiatorSignTx
+) {
+  await channel.shutdown((tx: Encoded.Transaction) =>
+    signTx('channel_close', tx)
+  );
+  useGameRoundStore().reset();
 }
 
 export async function registerEvents(
@@ -93,7 +104,7 @@ export async function responderSignTx(
       (contract) => {
         setResponderContract(contract);
         console.log('Responder contract ready');
-        useGameRoundStore().index = 1;
+        useGameRoundStore().startNewRound();
       }
     );
   }

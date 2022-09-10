@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import PlayerControls from './player-controls.vue';
 import { useGameRoundStore } from '../stores/game-round';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import {
   INITIATOR_KEYPAIR,
   RESPONDER_KEYPAIR,
 } from '../utils/sdk/sdk.constants';
+import { closeChannel } from '../utils/channel/channel.service';
+
+const channelIsClosing = ref(false);
 
 const gameRoundStore = useGameRoundStore();
 const winner = computed(() => {
@@ -45,12 +48,27 @@ const responderBalance = computed(
         "
       />
     </div>
-    <button
-      v-if="gameRoundStore.isComplete"
-      @click="gameRoundStore.startNewRound()"
-    >
-      New Round
-    </button>
+    <div class="buttons">
+      <button
+        v-if="gameRoundStore.isComplete"
+        @click="gameRoundStore.startNewRound()"
+        :disabled="channelIsClosing"
+      >
+        New Round
+      </button>
+      <button
+        v-if="gameRoundStore.isComplete"
+        @click="
+          () => {
+            channelIsClosing = true;
+            closeChannel();
+          }
+        "
+        :disabled="channelIsClosing"
+      >
+        Close Channel
+      </button>
+    </div>
   </div>
 </template>
 
@@ -62,6 +80,11 @@ const responderBalance = computed(
   align-items: center;
   gap: 20px;
   .players {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  .buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
