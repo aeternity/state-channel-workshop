@@ -16,4 +16,7 @@ export default defineConfig({
       include: [],
     },
   },
+  optimizeDeps: {
+    include: ['@aeternity/rock-paper-scissors'],
+  },
 });

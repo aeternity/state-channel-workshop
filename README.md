@@ -16,7 +16,7 @@ cd app && npm run dev
 
 # Steps
 ### Starting point - *Initialize accounts*
-branch: `start-here` or `master` 
+branch: `start-here`
 ### Step One - *Open channels*
 finished branch: `step-one`
 ### Step Two - *Register events & deploy contract*
