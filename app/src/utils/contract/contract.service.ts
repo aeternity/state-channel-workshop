@@ -1,7 +1,7 @@
 import { AeSdk, Channel, encodeContractAddress } from '@aeternity/aepp-sdk';
 import { SignTx } from '@aeternity/aepp-sdk/es/channel/internal';
 import { Encoded } from '@aeternity/aepp-sdk/es/utils/encoder';
-import contractSource from '@aeternity/rock-paper-scissors';
+import { contractBytecode, contractAci } from './contract';
 import {
   CONTRACT_CONFIGURATION,
   CONTRACT_NAME,
@@ -24,14 +24,14 @@ export async function deployContract(
   signTx: SignTx
 ) {
   const contract = await sdk.getContractInstance({
-    source: contractSource,
+    aci: contractAci,
+    bytecode: contractBytecode,
   });
-  const code = await contract.compile();
 
   const res = await channel.createContract(
     {
       ...CONTRACT_CONFIGURATION,
-      code,
+      code: contractBytecode,
       callData: contract.calldata.encode(CONTRACT_NAME, Methods.init, [
         ...Object.values(config),
       ]) as Encoded.ContractBytearray,
@@ -51,9 +51,9 @@ export async function buildContract(
   sdk: AeSdk
 ) {
   const contract = await sdk.getContractInstance({
-    source: contractSource,
+    aci: contractAci,
+    bytecode: contractBytecode,
   });
-  await contract.compile();
   const contractAddress = encodeContractAddress(
     owner,
     contractCreationChannelRound

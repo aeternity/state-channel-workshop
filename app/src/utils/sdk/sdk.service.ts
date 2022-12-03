@@ -1,6 +1,6 @@
 import { AeSdk, MemoryAccount, Node } from '@aeternity/aepp-sdk';
 import { Encoded } from '@aeternity/aepp-sdk/es/utils/encoder';
-import contractSource from '@aeternity/rock-paper-scissors';
+import { contractBytecode } from '../contract/contract';
 import {
   NODE_URL,
   COMPILER_URL,
@@ -63,20 +63,6 @@ export async function initSdk() {
   await genesisFund(responderSdk, RESPONDER_KEYPAIR.publicKey);
 }
 
-export async function verifyContractBytecode(
-  bytecode: Encoded.ContractBytearray,
-  source = contractSource
-) {
-  let isEqual = false;
-  try {
-    await responderSdk.compilerApi.validateByteCode({
-      bytecode,
-      source,
-      options: {},
-    });
-    isEqual = true;
-  } catch (e) {
-    isEqual = false;
-  }
-  return isEqual;
+export function verifyContractBytecode(bytecode: Encoded.ContractBytearray) {
+  return bytecode === contractBytecode;
 }

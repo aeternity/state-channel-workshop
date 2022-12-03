@@ -66,7 +66,7 @@ export async function responderSignTx(
   // and build the contract for the responder channel
   if (update?.op === 'OffChainNewContract' && update?.code && update?.owner) {
     const proposedBytecode = update.code;
-    const isContractValid = await verifyContractBytecode(proposedBytecode);
+    const isContractValid = verifyContractBytecode(proposedBytecode);
     if (!isContractValid) throw new Error('Contract is not valid');
     // @ts-expect-error ts-mismatch
     void buildContract(unpackTx(tx).tx.round, update.owner, responderSdk).then(
